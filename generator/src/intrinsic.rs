@@ -64,7 +64,7 @@ fn parse_internals(s: &str) -> Result<LLVMType, ()> {
             parse_internals(&s[v_len_idx..]).map(|t| LLVMType::Vector(Some((n, Box::new(t)))))
         })
     } else {
-        println!("/* unrecognised {} */", s);
+        warn!("unrecognised {}", s);
         Err(())
     }
 }
@@ -299,7 +299,7 @@ impl Intrinsic {
         let mut ret = vec![];
         let mut params = vec![];
         for sup in d.inherits.iter() {
-            //println!("/* codegen: {:?} :: {:?} */", d.name, sup.name);
+            trace!("codegen: {:?} :: {:?}", d.name, sup.name);
             match &*sup.name {
                 "GCCBuiltin" => {
                     match sup.args[0] {

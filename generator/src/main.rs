@@ -1,4 +1,6 @@
 #![feature(plugin, slice_patterns)]
+#[macro_use] extern crate log;
+extern crate env_logger;
 extern crate regex;
 
 // hack to replace use of regex_macros (which failed to build at the time)
@@ -20,6 +22,8 @@ macro_rules! try_opt {
 mod intrinsic;
 mod ast;
 fn main() {
+    env_logger::init().unwrap();
+
     let mut s = String::new();
     io::stdin().read_to_string(&mut s).unwrap();
 
@@ -30,10 +34,16 @@ fn main() {
 
     let mut modules = BTreeMap::new();
     for d in defs.iter() {
+        if d.name == "int_localescape" {
+            // hack to get rid of "error: variadic function must be declared with at least one named argument" in
+            // #[link_name = "llvm.localescape"] pub fn localescape(...) -> ();
+            // TODO: figure out if this is a missing rustc feature
+            continue;
+        }
         let intr = match intrinsic::Intrinsic::from_ast(d) {
             Err(_) if !d.name.starts_with("int_") => continue,
             //Err(e) => panic!("failed to parse: {:?} (reason {})", d, e),
-            Err(e) => { println!("/* warning: failed to parse {} (reason {}) */", d.name, e); continue },
+            Err(e) => { warn!("failed to parse {:?} (reason {})", d, e); continue },
             Ok(intr) => intr
         };
 
