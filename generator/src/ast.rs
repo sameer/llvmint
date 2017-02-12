@@ -284,7 +284,7 @@ impl<'a, I: Iterator<Item = Token>> Parser<'a, I> {
     fn parse_objects_to_eof(&mut self) -> Vec<Object> {
         let mut ret = vec![];
         while let Some(item) = self.parse_object_or_eof() {
-            println!("/* parsed a {:?} */", item);
+            //println!("/* parsed a {:?} */", item);
             ret.push(item);
         }
         ret
@@ -494,7 +494,7 @@ impl<'a, I: Iterator<Item = Token>> Parser<'a, I> {
 
 pub fn parse(s: &str, root: &Path) -> Vec<Object> {
     let mut p = Parser {
-        tokens: tokenize(s).into_iter().map(|x| { println!("/* tokenizer: popping {:?} */", x); x }),
+        tokens: tokenize(s).into_iter()/*.map(|x| { println!("/* tokenizer: popping {:?} */", x); x })*/,
         root: root
     };
     p.parse_objects_to_eof()

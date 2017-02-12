@@ -31,9 +31,10 @@ fn main() {
     let mut modules = BTreeMap::new();
     for d in defs.iter() {
         let intr = match intrinsic::Intrinsic::from_ast(d) {
-            None if !d.name.starts_with("int_") => continue,
-            None => panic!("failed to parse: {:?}", d),
-            Some(intr) => intr
+            Err(_) if !d.name.starts_with("int_") => continue,
+            //Err(e) => panic!("failed to parse: {:?} (reason {})", d, e),
+            Err(e) => { println!("/* warning: failed to parse {} (reason {}) */", d.name, e); continue },
+            Ok(intr) => intr
         };
 
         (match modules.entry(intr.arch) {
