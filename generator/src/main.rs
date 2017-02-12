@@ -1,6 +1,12 @@
-#![feature(plugin, slice_patterns, str_char)]
-#![plugin(regex_macros)]
+#![feature(plugin, slice_patterns)]
 extern crate regex;
+
+// hack to replace use of regex_macros (which failed to build at the time)
+macro_rules! regex {
+    ($s:expr) => {
+        ::regex::Regex::new($s).unwrap()
+    }
+}
 
 use std::io;
 use std::io::prelude::*;

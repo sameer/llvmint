@@ -23,26 +23,27 @@ enum Token {
 fn tokenize(mut s: &str) -> Vec<Token> {
     let mut stack = vec![];
     let mut current = vec![];
-    while !s.is_empty() && s.char_at(0).is_whitespace() {
+    while !s.is_empty() && s.chars().next().unwrap().is_whitespace() {
         // will fail with non-ascii whitespace
         s = &s[1..]
     }
 
     while !s.is_empty() {
-        let length = match s.char_at(0) {
+        let length = match s.chars().next().unwrap() {
             ':' => { current.push(Token::Colon); 1 },
             ',' => { current.push(Token::Comma); 1 },
             ';' => { current.push(Token::Semicolon); 1 },
             '=' => { current.push(Token::Equals); 1 },
             '!' => { current.push(Token::Bang); 1 }
             '"' /*"*/=> {
-                let string = regex!("^\"(.*?)\"").captures(s).expect("bad string").at(1)
-                    .unwrap();
+                let string = regex!("^\"(.*?)\"").captures(s).expect("bad string").get(1)
+                    .unwrap().as_str();
                 current.push(Token::String(string.to_string()));
                 string.len() + 2
             }
             '0'...'9' => {
-                let num = regex!("^[0-9]+").captures(s).expect("bad num").at(0).unwrap();
+                let num = regex!("^[0-9]+").captures(s).expect("bad num").get(0).unwrap()
+                    .as_str();
                 current.push(Token::Int(num.parse().unwrap()));
                 num.len()
             }
@@ -78,7 +79,7 @@ fn tokenize(mut s: &str) -> Vec<Token> {
             c if c.is_whitespace() => 0,
             _ => {
                 let ident = match regex!("[A-Za-z0-9_]+").captures(s) {
-                    Some(i) => i.at(0).unwrap(),
+                    Some(i) => i.get(0).unwrap().as_str(),
                     None => panic!("invalid token stream, {}...", &s[..cmp::max(10, s.len())])
                 };
                 current.push(Token::Ident(ident.to_string()));
@@ -86,7 +87,7 @@ fn tokenize(mut s: &str) -> Vec<Token> {
             }
         };
         s = &s[length..];
-        while !s.is_empty() && s.char_at(0).is_whitespace() {
+        while !s.is_empty() && s.chars().next().unwrap().is_whitespace() {
             // will fail with non-ascii whitespace
             s = &s[1..]
         }

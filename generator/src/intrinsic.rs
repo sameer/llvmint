@@ -292,7 +292,7 @@ impl Intrinsic {
     pub fn from_ast(d: &ast::Def) -> Option<Intrinsic> {
         if !d.name.starts_with("int_") { return None }
         let arch = regex!(r"^int_([^_]*)");
-        let arch = arch.captures(&d.name).unwrap().at(1).unwrap().parse();
+        let arch = arch.captures(&d.name).unwrap().get(1).unwrap().as_str().parse();
 
         let mut gcc_name = None;
         let mut llvm_name = None;
@@ -437,11 +437,11 @@ impl Intrinsic {
                 })
                 .collect::<Option<Vec<_>>>();
             let params = match params {
-                Some(p) => p.connect(", "),
+                Some(p) => p.join(", "),
                 None => return
             };
 
-            let ret = match &*used_ret {
+            let ret = match *used_ret {
                 [] => "()".to_string(),
                 [ref ret] => match ret.to_concrete_rust_string() {
                     Some(r) => r,
