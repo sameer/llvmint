@@ -33,6 +33,7 @@
 //! Using an intrinsic in a configuration that is not supported will
 //! likely cause LLVM assertions or general badness along those lines.
 
+#[cfg(feature="simd")]
 extern crate simdty;
 
 extern {
