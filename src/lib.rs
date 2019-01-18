@@ -1,5 +1,6 @@
 #![feature(simd_ffi, link_llvm_intrinsics)]
 #![allow(non_snake_case)]
+#![cfg_attr(not(feature="std"), no_std)]
 
 //! Bindings to (almost) all LLVM intrinsics.
 //!

@@ -20,5 +20,6 @@ simdty = {version = "0", optional = true }
 
 [features]
 unstable = []
-default = ["simd"]
+default = ["simd", "std"]
 simd = ["simdty"]
+std = []
