@@ -1,5 +1,4 @@
-#![cfg(any(target_arch = "x86",
-           target_arch = "x86_64"))]
+#![cfg(all(any(target_arch = "x86", target_arch = "x86_64"), feature = "simd"))]
 
 extern crate llvmint;
 extern crate simdty;
