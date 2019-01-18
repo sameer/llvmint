@@ -20,7 +20,7 @@ fn sse_max() {
 #[test]
 fn sse_sqrt() {
     let a = f32x4(0.0, 1.0, 4.0, 9.0);
-    let b = unsafe {llvmint::sqrt_v4f32(a)};
+    let b = unsafe { llvmint::sqrt_v4f32(a) };
 
     assert_eq!(b.0, 0.0);
     assert_eq!(b.1, 1.0);
